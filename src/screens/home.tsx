@@ -4,6 +4,7 @@ import { Dimensions, FlatList, Image, StyleSheet, View, Text } from 'react-nativ
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const { height, width } = Dimensions.get("window");
+import { SharedElement } from 'react-navigation-shared-element';
 
 const data = [
     {
@@ -43,10 +44,14 @@ const Story: React.FC<any> = (props) => {
     const { id, title, uri } = props;
     const navigation = useNavigation();
     return (
-        <TouchableOpacity style={{ padding: 10 }} onPress={() => navigation.navigate("Detail", {...props})}>
+        <TouchableOpacity style={{ padding: 10 }} onPress={() => navigation.navigate("Detail", { ...props })}>
             <View style={{ width: width / 2.5, height: 200, borderRadius: 10 }}>
-                <Image style={[StyleSheet.absoluteFillObject, { borderRadius: 10 }]} source={{ uri }} />
+                <SharedElement id={`image-${id}`} style={[StyleSheet.absoluteFillObject]}>
+                    <Image style={[StyleSheet.absoluteFillObject, { borderRadius: 10 }]} source={{ uri }} />
+                </SharedElement>
+                <SharedElement id={`title-${id}`} style={[StyleSheet.absoluteFillObject]}>
                 <Text style={{ position: 'absolute', bottom: 0, padding: 10, color: 'white', fontSize: 20, fontWeight: '700' }}>{title}</Text>
+                </SharedElement>
             </View>
         </TouchableOpacity>
     )
@@ -60,7 +65,7 @@ export const Home = () => {
                 data={data}
                 numColumns={2}
                 keyExtractor={(item) => item.id}
-                renderItem={({item}) => <Story {...item} />}
+                renderItem={({ item }) => <Story {...item} />}
             />
         </SafeAreaView>
     )
